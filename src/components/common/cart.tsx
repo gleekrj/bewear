@@ -1,6 +1,7 @@
 "use client";
 
 import { ShoppingBasketIcon } from "lucide-react";
+import Link from "next/link";
 
 import { useCart } from "@/app/hooks/queries/use-cart";
 import { formatCentsToBRL } from "@/helpers/money";
@@ -73,7 +74,9 @@ const Cart = () => {
                 <p>{formatCentsToBRL(cart?.totalPriceInCents ?? 0)}</p>
               </div>
 
-              <Button className="mt-5 rounded-full">Finalizar compra</Button>
+              <Button className="mt-5 rounded-full" asChild>
+                <Link href="/cart/identification">Finalizar compra</Link>
+              </Button>
             </div>
           )}
         </div>
