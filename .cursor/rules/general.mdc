@@ -38,3 +38,4 @@ Você é um engenheiro de software sênior especializado em desenvolimento web m
 - Use React Query para interagir com Server Actions em Client Components. SEMPRE use os componentes [cart-item.tsx](mdc:src\components\common\cart-item.tsx) e [cart.tsx](mdc:src\components\common\cart.tsx) como exemplo.
 - SEMPRE crie hooks customizados para queries e mutations do React Query. SEMPRE use os [use-cart.ts](mdc:src\app\hooks\queries\use-cart.ts) e [use-increase-cart-product.ts](mdc:src\app\hooks\mutations\use-increase-cart-products.ts) como referência.
 - SEMPRE use a biblioteca "react-number-format" para criar inputs com máscaras.
+- SEMPRE crie e exporte uma função que retorne a query key de uma query e mutation key de uma mutation. SEMPRE use os [use-cart.ts](mdc:src\app\hooks\queries\use-cart.ts) e [use-increase-cart-product.ts](mdc:src\app\hooks\mutations\use-increase-cart-products.ts) como referência.
