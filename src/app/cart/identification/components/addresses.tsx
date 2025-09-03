@@ -4,8 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 import { z } from "zod";
 
+import { useCreateShippingAddress } from "@/app/hooks/mutations/use-create-shipping-address";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -45,6 +47,8 @@ type AddressFormValues = z.infer<typeof addressFormSchema>;
 const Addresses = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
+  const createShippingAddressMutation = useCreateShippingAddress();
+
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressFormSchema),
     defaultValues: {
@@ -62,8 +66,18 @@ const Addresses = () => {
     },
   });
 
-  const onSubmit = (values: AddressFormValues) => {
-    console.log(values);
+  const onSubmit = async (values: AddressFormValues) => {
+    createShippingAddressMutation.mutate(values, {
+      onSuccess: () => {
+        toast.success("Endereço criado com sucesso!");
+        form.reset();
+        setSelectedAddress(null);
+      },
+      onError: (error) => {
+        toast.error("Erro ao criar endereço. Tente novamente.");
+        console.error(error);
+      },
+    });
   };
 
   return (
@@ -279,7 +293,14 @@ const Addresses = () => {
                   />
 
                   <div className="flex justify-end pt-4">
-                    <Button type="submit">Salvar Endereço</Button>
+                    <Button
+                      type="submit"
+                      disabled={createShippingAddressMutation.isPending}
+                    >
+                      {createShippingAddressMutation.isPending
+                        ? "Salvando..."
+                        : "Salvar Endereço"}
+                    </Button>
                   </div>
                 </form>
               </Form>
