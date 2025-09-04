@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createShippingAddress } from "@/action/create-shipping-address";
 import { CreateShippingAddressSchema } from "@/action/create-shipping-address/schema";
 
-import { getUseShippingAddressesQueryKey } from "../queries/use-shipping-addresses";
+import { getUseShippingAddressesQueryKey } from "../queries/use-user-addresses";
 
 export const getCreateShippingAddressMutationKey = () =>
     ["create-shipping-address"] as const;

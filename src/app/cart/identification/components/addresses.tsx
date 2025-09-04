@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useCreateShippingAddress } from "@/app/hooks/mutations/use-create-shipping-address";
-import { useShippingAddresses } from "@/app/hooks/queries/use-shipping-addresses";
+import { useUserAddresses } from "@/app/hooks/queries/use-user-addresses";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { shippingAddressTable } from "@/db/schema";
 
 const addressFormSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -45,10 +46,16 @@ const addressFormSchema = z.object({
 
 type AddressFormValues = z.infer<typeof addressFormSchema>;
 
-const Addresses = () => {
+interface AddressesProps {
+  shippingAddress: (typeof shippingAddressTable.$inferSelect)[];
+}
+
+const Addresses = ({ shippingAddress }: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
 
-  const { data: addresses, isLoading } = useShippingAddresses();
+  const { data: addresses, isLoading } = useUserAddresses({
+    initialData: shippingAddress,
+  });
   const createShippingAddressMutation = useCreateShippingAddress();
 
   const form = useForm<AddressFormValues>({
