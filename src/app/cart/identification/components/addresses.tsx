@@ -1,13 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { getCart } from "@/action/get-cart";
 import { useCreateShippingAddress } from "@/app/hooks/mutations/use-create-shipping-address";
+import { useUpdateCartShippingAddress } from "@/app/hooks/mutations/use-update-cart-shipping-address";
+import { useCart } from "@/app/hooks/queries/use-cart";
 import { useUserAddresses } from "@/app/hooks/queries/use-user-addresses";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,15 +51,22 @@ type AddressFormValues = z.infer<typeof addressFormSchema>;
 
 interface AddressesProps {
   shippingAddress: (typeof shippingAddressTable.$inferSelect)[];
+  defaultShippingAddressId: string | null;
 }
 
-const Addresses = ({ shippingAddress }: AddressesProps) => {
-  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+const Addresses = ({
+  shippingAddress,
+  defaultShippingAddressId,
+}: AddressesProps) => {
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(
+    defaultShippingAddressId || null,
+  );
 
   const { data: addresses, isLoading } = useUserAddresses({
     initialData: shippingAddress,
   });
   const createShippingAddressMutation = useCreateShippingAddress();
+  const updateCartShippingAddressMutation = useUpdateCartShippingAddress();
 
   const form = useForm<AddressFormValues>({
     resolver: zodResolver(addressFormSchema),
@@ -77,16 +87,54 @@ const Addresses = ({ shippingAddress }: AddressesProps) => {
 
   const onSubmit = async (values: AddressFormValues) => {
     createShippingAddressMutation.mutate(values, {
-      onSuccess: () => {
+      onSuccess: (newAddress) => {
         toast.success("Endereço criado com sucesso!");
         form.reset();
-        setSelectedAddress(null);
+        setSelectedAddress(newAddress.id);
+
+        if (newAddress.id) {
+          updateCartShippingAddressMutation.mutate(
+            {
+              shippingAddressId: newAddress.id,
+            },
+            {
+              onSuccess: () => {
+                toast.success("Endereço vinculado ao carrinho!");
+              },
+              onError: (error) => {
+                toast.error("Erro ao vincular endereço ao carrinho.");
+                console.error(error);
+              },
+            },
+          );
+        }
       },
       onError: (error) => {
         toast.error("Erro ao criar endereço. Tente novamente.");
         console.error(error);
       },
     });
+  };
+
+  const handleGoToPayment = () => {
+    if (selectedAddress && selectedAddress !== "add_new") {
+      updateCartShippingAddressMutation.mutate(
+        {
+          shippingAddressId: selectedAddress,
+        },
+        {
+          onSuccess: () => {
+            toast.success(
+              "Endereço selecionado! Redirecionando para pagamento...",
+            );
+          },
+          onError: (error) => {
+            toast.error("Erro ao selecionar endereço.");
+            console.error(error);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -137,6 +185,20 @@ const Addresses = ({ shippingAddress }: AddressesProps) => {
             </>
           )}
         </RadioGroup>
+
+        {selectedAddress && selectedAddress !== "add_new" && (
+          <div className="mt-4">
+            <Button
+              className="w-full"
+              onClick={handleGoToPayment}
+              disabled={updateCartShippingAddressMutation.isPending}
+            >
+              {updateCartShippingAddressMutation.isPending
+                ? "Processando..."
+                : "Ir para pagamento"}
+            </Button>
+          </div>
+        )}
 
         {selectedAddress === "add_new" && (
           <Card className="mt-4">
@@ -333,16 +395,19 @@ const Addresses = ({ shippingAddress }: AddressesProps) => {
                     )}
                   />
 
-                  <div className="flex justify-end pt-4">
-                    <Button
-                      type="submit"
-                      disabled={createShippingAddressMutation.isPending}
-                    >
-                      {createShippingAddressMutation.isPending
-                        ? "Salvando..."
-                        : "Salvar Endereço"}
-                    </Button>
-                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={
+                      createShippingAddressMutation.isPending ||
+                      updateCartShippingAddressMutation.isPending
+                    }
+                  >
+                    {createShippingAddressMutation.isPending ||
+                    updateCartShippingAddressMutation.isPending
+                      ? "Salvando..."
+                      : "Salvar Endereço"}
+                  </Button>
                 </form>
               </Form>
             </CardContent>
