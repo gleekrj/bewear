@@ -1,16 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { getCart } from "@/action/get-cart";
 import { useCreateShippingAddress } from "@/app/hooks/mutations/use-create-shipping-address";
 import { useUpdateCartShippingAddress } from "@/app/hooks/mutations/use-update-cart-shipping-address";
-import { useCart } from "@/app/hooks/queries/use-cart";
 import { useUserAddresses } from "@/app/hooks/queries/use-user-addresses";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { shippingAddressTable } from "@/db/schema";
+
+import { formatAddress } from "../../helpers/address";
 
 const addressFormSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -58,6 +59,7 @@ const Addresses = ({
   shippingAddress,
   defaultShippingAddressId,
 }: AddressesProps) => {
+  const router = useRouter();
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     defaultShippingAddressId || null,
   );
@@ -127,6 +129,7 @@ const Addresses = ({
             toast.success(
               "Endereço selecionado! Redirecionando para pagamento...",
             );
+            router.push("/cart/confirmation");
           },
           onError: (error) => {
             toast.error("Erro ao selecionar endereço.");
@@ -161,12 +164,7 @@ const Addresses = ({
                       />
                       <div className="flex-1">
                         <Label htmlFor={address.id} className="text-sm">
-                          {address.recipientName} - {address.street},{" "}
-                          {address.number}
-                          {address.complement &&
-                            `, ${address.complement}`} - {address.neighborhood},{" "}
-                          {address.city} - {address.state} - CEP:{" "}
-                          {address.zipCode}
+                          {formatAddress(address)}
                         </Label>
                       </div>
                     </div>
