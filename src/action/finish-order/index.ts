@@ -39,9 +39,22 @@ export const finishOrder = async () => {
     const totalPriceInCents = cart.items.reduce((acc, item) => acc + item.productVariant.priceInCents * item.quantity, 0);
 
     await db.transaction(async (tx) => {
-
+        if (!cart.shippingAddress) {
+            throw new Error("Shipping address not found");
+        }
         const [order] = await tx.insert(orderTable).values({
-            ...cart.shippingAddress!,
+            recipientName: cart.shippingAddress.recipientName,
+            street: cart.shippingAddress.street,
+            number: cart.shippingAddress.number,
+            complement: cart.shippingAddress.complement,
+            city: cart.shippingAddress.city,
+            state: cart.shippingAddress.state,
+            neighborhood: cart.shippingAddress.neighborhood,
+            zipCode: cart.shippingAddress.zipCode,
+            country: cart.shippingAddress.country,
+            phone: cart.shippingAddress.phone,
+            email: cart.shippingAddress.email,
+            cpfOrCnpj: cart.shippingAddress.cpfOrCnpj,
             userId: session.user.id,
             shippingAddressId: cart.shippingAddress!.id,
             totalPriceInCents: totalPriceInCents,

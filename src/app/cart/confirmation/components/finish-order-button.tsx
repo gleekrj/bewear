@@ -3,6 +3,7 @@
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 import { useFinishOrder } from "@/app/hooks/mutations/use-finish-order";
@@ -10,15 +11,19 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 
 const FinishOrderButton = () => {
-  const [sucessDialogIsOpen, setSucessDialogIsOpen] = useState(true);
+  const [sucessDialogIsOpen, setSucessDialogIsOpen] = useState(false);
   const finishOrderMutation = useFinishOrder();
+  const handleFinishOrderClick = () => {
+    finishOrderMutation.mutate();
+    setSucessDialogIsOpen(true);
+  };
 
   return (
     <>
       <Button
         className="w-full rounded-full"
         size="lg"
-        onClick={() => finishOrderMutation.mutate()}
+        onClick={handleFinishOrderClick}
         disabled={finishOrderMutation.isPending}
       >
         {finishOrderMutation.isPending && (
@@ -45,7 +50,7 @@ const FinishOrderButton = () => {
               Ver meus pedidos
             </Button>
             <Button className="w-full rounded-full" size="lg" variant="outline">
-              Voltar para a loja
+              <Link href="/">Voltar para a loja</Link>
             </Button>
           </DialogFooter>
         </DialogContent>
