@@ -16,7 +16,7 @@ export const getUserAddresses = async () => {
 
     const addresses = await db.query.shippingAddressTable.findMany({
         where: (address, { eq }) => eq(address.userId, session.user.id),
-        orderBy: (address, { desc }) => [desc(address.createAt)],
+        orderBy: (address, { desc }) => [desc(address.createdAt)],
     });
 
     return addresses;

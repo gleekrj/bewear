@@ -16,7 +16,7 @@ const Home = async () => {
     },
   });
   const newlyCreatedProducts = await db.query.productTable.findMany({
-    orderBy: [desc(productTable.createAt)],
+    orderBy: [desc(productTable.createdAt)],
     with: {
       variants: true,
     },

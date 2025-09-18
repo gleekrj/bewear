@@ -41,7 +41,7 @@ const IdentificationPage = async () => {
 
   const shippingAddress = await db.query.shippingAddressTable.findMany({
     where: eq(shippingAddressTable.userId, session.user.id),
-    orderBy: [desc(shippingAddressTable.createAt)],
+    orderBy: [desc(shippingAddressTable.createdAt)],
   });
 
   const cartTotalInCents = cart.items.reduce(
