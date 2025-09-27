@@ -1,11 +1,13 @@
 "use client";
 
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
+import { loadStripe } from "@stripe/stripe-js";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { createCheckoutSession } from "@/action/create-checkout-session";
 import { useFinishOrder } from "@/app/hooks/mutations/use-finish-order";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
@@ -13,8 +15,22 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 const FinishOrderButton = () => {
   const [sucessDialogIsOpen, setSucessDialogIsOpen] = useState(false);
   const finishOrderMutation = useFinishOrder();
-  const handleFinishOrderClick = () => {
-    finishOrderMutation.mutate();
+  const handleFinishOrderClick = async () => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      throw new Error("Stripe publishable key is not set");
+    }
+
+    const { orderId } = await finishOrderMutation.mutateAsync();
+    const checkoutSession = await createCheckoutSession({ orderId });
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+    );
+    if (!stripe) {
+      throw new Error("Failed to load Stripe");
+    }
+    await stripe.redirectToCheckout({
+      sessionId: checkoutSession.id,
+    });
     setSucessDialogIsOpen(true);
   };
 
