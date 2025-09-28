@@ -30,8 +30,8 @@ const CheckoutSuccessPage = () => {
             na seção de “Meus Pedidos”.
           </DialogDescription>
           <DialogFooter>
-            <Button className="w-full rounded-full" size="lg">
-              Ver meus pedidos
+            <Button className="w-full rounded-full" size="lg" asChild>
+              <Link href="/my-orders">Ver meus pedidos</Link>
             </Button>
             <Button className="w-full rounded-full" size="lg" variant="outline">
               <Link href="/">Voltar para a loja</Link>
