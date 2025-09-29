@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
