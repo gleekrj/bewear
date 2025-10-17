@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bewear 👕
 
-## Getting Started
+Aplicativo de e-commerce de roupas, permitindo que os usuários naveguem por produtos, adicionem ao carrinho e realizem pagamentos online com integração ao Stripe.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tecnologias
+- **Frontend & Backend:** Next.js (React + Node.js)  
+- **Pagamentos:** Stripe  
+- **Deploy:** Vercel  
+- **Controle de versão:** Git  
+- **Estilização:** CSS / Tailwind / Shadcn/ui
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Funcionalidades
+- Listagem de produtos com imagens e detalhes  
+- Carrinho de compras e gerenciamento de itens  
+- Pagamento online seguro via Stripe  
+- Layout responsivo e experiência de usuário fluida  
+- Integração de backend para gerenciamento de pedidos e checkout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 💻 Como rodar localmente
+- Clone o repositório:  
+  ```bash
+  git clone https://github.com/gleekrj/bewear.git
 
-To learn more about Next.js, take a look at the following resources:
+- Instale as dependências:  
+  ```bash
+  npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Configure variáveis de ambiente (ex.: chave do Stripe, base de dados, etc.)  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Rode a aplicação:  
+  ```bash
+  npm run dev
 
-## Deploy on Vercel
+- Abra o navegador em `http://localhost:3000`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 Deploy
+O app está hospedado no Vercel:  
+[Ver Bewear ao vivo (Otimizado para celular)](https://bewear-wheat.vercel.app/)
+
+---
+
+## 📂 Estrutura do projeto
+- `/pages` → Páginas do Next.js (home, produtos, checkout)  
+- `/components` → Componentes reutilizáveis de UI  
+- `/lib` → Integrações externas (ex: Stripe)  
+- `/styles` → CSS / Tailwind / Shadcn/ui  
+- `/public` → Assets e imagens
+
+---
+
+## 📫 Contato
+- GitHub: [gleekrj](https://github.com/gleekrj)  
+- LinkedIn: [Fábio Matos](https://www.linkedin.com/in/fabio-matos/)
+
+---
+
+**Status:** Projeto de estudo/portfólio em e-commerce com Next.js e Stripe 🚀
