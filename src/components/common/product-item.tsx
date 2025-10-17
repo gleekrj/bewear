@@ -14,22 +14,28 @@ interface ProductItemProps {
 
 const ProductItem = ({ product, textContainerClassname }: ProductItemProps) => {
   const firstVariant = product.variants[0];
+
+  if (!firstVariant) {
+    return null;
+  }
+
   return (
     <Link
       href={`/product-variant/${firstVariant.slug}`}
-      className="flex flex-col gap-4"
+      className="flex min-w-[200px] flex-col gap-4 md:min-w-0"
     >
-      <Image
-        src={firstVariant.imageUrl}
-        alt={firstVariant.name}
-        sizes="100vw"
-        width={0}
-        height={0}
-        className="h-auto w-full rounded-3xl"
-      />
+      <div className="relative aspect-square overflow-hidden rounded-3xl">
+        <Image
+          src={firstVariant.imageUrl}
+          alt={firstVariant.name}
+          fill
+          sizes="(max-width: 768px) 200px, 25vw"
+          className="object-cover transition-transform hover:scale-105"
+        />
+      </div>
       <div
         className={cn(
-          "flex max-w-[200px] flex-col gap-1",
+          "flex max-w-[200px] flex-col gap-1 md:max-w-full",
           textContainerClassname,
         )}
       >

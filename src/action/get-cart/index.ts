@@ -12,7 +12,7 @@ export const getCart = async () => {
     })
 
     if (!session?.user) {
-        throw new Error("Unauthorized");
+        return null;
     }
 
     const cart = await db.query.cartTable.findFirst({

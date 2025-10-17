@@ -1,11 +1,9 @@
 import { desc } from "drizzle-orm";
-import Image from "next/image";
 import React from "react";
 
-import CategorySelector from "@/components/common/category-selector";
-import Footer from "@/components/common/footer";
 import { Header } from "@/components/common/header";
-import ProductList from "@/components/common/product-list";
+import HomeDesktop from "@/components/common/home-desktop";
+import HomeMobile from "@/components/common/home-mobile";
 import { db } from "@/db";
 import { productTable } from "@/db/schema";
 
@@ -27,37 +25,19 @@ const Home = async () => {
   return (
     <>
       <Header />
-      <div className="space-y-6">
-        <div className="px-5">
-          <Image
-            src="/banner-01.png"
-            alt="Leve a vida com estilo"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="h-auto w-full"
-          />
-        </div>
-
-        <ProductList title="Mais Vendidos" products={products} />
-
-        <div className="px-5">
-          <CategorySelector categories={categories} />
-        </div>
-
-        <div className="px-5">
-          <Image
-            src="/banner-02.png"
-            alt="Leve a vida com estilo"
-            height={0}
-            width={0}
-            sizes="100vw"
-            className="h-auto w-full"
-          />
-        </div>
-
-        <ProductList title="Novos Produtos" products={newlyCreatedProducts} />
-        <Footer />
+      <div className="hidden md:block">
+        <HomeDesktop
+          products={products}
+          newlyCreatedProducts={newlyCreatedProducts}
+          categories={categories}
+        />
+      </div>
+      <div className="md:hidden">
+        <HomeMobile
+          products={products}
+          newlyCreatedProducts={newlyCreatedProducts}
+          categories={categories}
+        />
       </div>
     </>
   );

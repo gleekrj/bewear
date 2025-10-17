@@ -51,32 +51,36 @@ const ConfirmationPage = async () => {
   return (
     <div>
       <Header />
-      <div className="space-y-4 px-5">
-        <Card>
-          <CardHeader>
-            <CardTitle>Identificação</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Card>
-              <CardContent>
-                <p className="text-sm">{formatAddress(cart.shippingAddress)}</p>
-              </CardContent>
-            </Card>
-            <FinishOrderButton />
-          </CardContent>
-        </Card>
-        <CartSummary
-          subtotalInCents={cartTotalInCents}
-          totalInCents={cartTotalInCents}
-          products={cart.items.map((item) => ({
-            id: item.productVariant.id,
-            name: item.productVariant.product.name,
-            variantName: item.productVariant.name,
-            quantity: item.quantity,
-            priceInCents: item.productVariant.priceInCents,
-            imageUrl: item.productVariant.imageUrl,
-          }))}
-        />
+      <div className="px-5 py-6 md:mx-auto md:max-w-7xl md:px-0 md:py-12">
+        <div className="space-y-4 md:grid md:grid-cols-2 md:gap-8 md:space-y-0">
+          <Card>
+            <CardHeader>
+              <CardTitle>Identificação</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-sm">
+                    {formatAddress(cart.shippingAddress)}
+                  </p>
+                </CardContent>
+              </Card>
+              <FinishOrderButton />
+            </CardContent>
+          </Card>
+          <CartSummary
+            subtotalInCents={cartTotalInCents}
+            totalInCents={cartTotalInCents}
+            products={cart.items.map((item) => ({
+              id: item.productVariant.id,
+              name: item.productVariant.product.name,
+              variantName: item.productVariant.name,
+              quantity: item.quantity,
+              priceInCents: item.productVariant.priceInCents,
+              imageUrl: item.productVariant.imageUrl,
+            }))}
+          />
+        </div>
       </div>
       <div className="mt-12">
         <Footer />
