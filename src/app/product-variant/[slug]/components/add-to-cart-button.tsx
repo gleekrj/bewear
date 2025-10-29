@@ -3,10 +3,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
 
 import { addProductToCart } from "@/action/add-cart-product";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 interface AddToCartButtonProps {
   productVariantId: string;
