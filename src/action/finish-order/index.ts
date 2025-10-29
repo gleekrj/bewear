@@ -13,7 +13,7 @@ export const finishOrder = async () => {
     });
 
     if (!session?.user) {
-        throw new Error("Unauthorized");
+        throw new Error("É necessário estar logado para realizar a compra");
     }
 
     const cart = await db.query.cartTable.findFirst({

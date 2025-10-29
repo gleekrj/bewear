@@ -17,7 +17,7 @@ export const createCheckoutSession = async (data: CreateCheckoutSessionSchema) =
         headers: await headers(),
     });
     if (!session?.user) {
-        throw new Error("Unauthorized");
+        throw new Error("É necessário estar logado para realizar a compra");
     }
 
     const { orderId } = createCheckoutSessionSchema.parse(data);

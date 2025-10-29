@@ -16,7 +16,7 @@ export const addProductToCart = async (data: addProductToCartSchema) => {
     });
 
     if (!session?.user) {
-        throw new Error("Unauthorized");
+        throw new Error("É necessário estar logado para realizar a compra");
     }
 
     const productVariant = await db.query.productVariantTable.findFirst({

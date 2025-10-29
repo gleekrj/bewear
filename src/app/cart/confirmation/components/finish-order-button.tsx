@@ -2,6 +2,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { createCheckoutSession } from "@/action/create-checkout-session";
 import { useFinishOrder } from "@/app/hooks/mutations/use-finish-order";
@@ -10,21 +11,31 @@ import { Button } from "@/components/ui/button";
 const FinishOrderButton = () => {
   const finishOrderMutation = useFinishOrder();
   const handleFinishOrderClick = async () => {
-    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-      throw new Error("Stripe publishable key is not set");
-    }
+    try {
+      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+        throw new Error("Stripe publishable key is not set");
+      }
 
-    const { orderId } = await finishOrderMutation.mutateAsync();
-    const checkoutSession = await createCheckoutSession({ orderId });
-    const stripe = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
-    );
-    if (!stripe) {
-      throw new Error("Failed to load Stripe");
+      const { orderId } = await finishOrderMutation.mutateAsync();
+      const checkoutSession = await createCheckoutSession({ orderId });
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+      );
+      if (!stripe) {
+        throw new Error("Failed to load Stripe");
+      }
+      await stripe.redirectToCheckout({
+        sessionId: checkoutSession.id,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes("logado")) {
+          toast.error(error.message);
+        } else {
+          toast.error("Erro ao finalizar compra. Tente novamente.");
+        }
+      }
     }
-    await stripe.redirectToCheckout({
-      sessionId: checkoutSession.id,
-    });
   };
 
   return (

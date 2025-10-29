@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { addProductToCart } from "@/action/add-cart-product";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,13 @@ const AddToCartButton = ({
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (error: Error) => {
+      if (error.message.includes("logado")) {
+        toast.error(error.message);
+      } else {
+        toast.error("Erro ao adicionar produto ao carrinho");
+      }
     },
   });
   return (
