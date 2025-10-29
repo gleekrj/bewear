@@ -7,11 +7,17 @@ import { toast } from "sonner";
 import { createCheckoutSession } from "@/action/create-checkout-session";
 import { useFinishOrder } from "@/app/hooks/mutations/use-finish-order";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 const FinishOrderButton = () => {
   const finishOrderMutation = useFinishOrder();
+  const { data: session } = authClient.useSession();
   const handleFinishOrderClick = async () => {
     try {
+      if (!session?.user) {
+        toast.error("É necessário estar logado para realizar a compra");
+        return;
+      }
       if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
         throw new Error("Stripe publishable key is not set");
       }
